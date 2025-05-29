@@ -16,5 +16,5 @@ def main_menu(flights):
             reserve_flight(flights)
         elif choice == "Exit":
             clear_reservations()
-            print("Thank you for JetPass!")
+            print("Thank you for using JetPass!")
             break

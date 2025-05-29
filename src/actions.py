@@ -2,7 +2,7 @@ from rich.table import Table
 from rich.console import Console
 from rich.prompt import Prompt
 from classes import TicketReserve
-from reservations import save_reservation
+from reservations import save_reservation, load_reservations
 
 console = Console()  # Required for rich library
 
@@ -94,3 +94,32 @@ def reserve_flight(
                 console.print("Invalid number. Try again.", style="bold red")
         except ValueError:
             console.print("Please enter a valid number.", style="bold red")
+
+
+def view_reservations():
+    reservations = load_reservations()
+    if not reservations:
+        console.print("No reservations found.", style="bold red")
+        return
+
+    table = Table(show_header=True, header_style="bold white")
+    table.add_column("Ticket Number", style="cyan", justify="center")
+    table.add_column("Flight Number", style="bold", justify="center")
+    table.add_column("Airline", justify="center")
+    table.add_column("Origin", justify="center")
+    table.add_column("Destination", justify="center")
+    table.add_column("Departure Date", justify="center")
+    table.add_column("Price", style="green", justify="center")
+
+    for r in reservations:
+        table.add_row(
+            r.ticket_number,
+            r.flight_number,
+            r.airline,
+            r.origin,
+            r.destination,
+            r.departure_date,
+            f"{r.price} Ft",
+        )
+
+    console.print(table)
