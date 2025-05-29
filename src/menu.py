@@ -2,6 +2,7 @@ import questionary
 from prompt_toolkit.styles import Style
 from actions import view_flights, reserve_flight, view_reservations, delete_reservation
 from reservations import clear_reservations
+from prompt_toolkit.output.win32 import NoConsoleScreenBufferError
 
 
 def main_menu(flights):
@@ -22,17 +23,24 @@ def main_menu(flights):
     )  # Customized style for questionary
 
     while True:
-        choice = questionary.select(
-            "What would you like to do?",
-            choices=[
-                "View Flights",
-                "Reserve Flight",
-                "My Reservations",
-                "Delete Reservation",
-                "Exit",
-            ],
-            style=custom_style,
-        ).ask()
+        try:
+            choice = questionary.select(
+                "What would you like to do?",
+                choices=[
+                    "View Flights",
+                    "Reserve Flight",
+                    "My Reservations",
+                    "Delete Reservation",
+                    "Exit",
+                ],
+                style=custom_style,
+            ).ask()
+        except NoConsoleScreenBufferError:
+            print(
+                "ERROR: No Windows console found.\n"
+                "Please run this program in a terminal like cmd.exe, PowerShell, or Windows Terminal."
+            )
+            break  # Exit the menu loop
 
         if choice == "View Flights":
             view_flights(flights)
