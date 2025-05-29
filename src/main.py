@@ -1,9 +1,10 @@
-from data_import import import_flight_data
 from flight_factory import create_flights_from_dataframe
+from reservations import load_default_reservations
 from menu import main_menu
 
 
 def main():
+    load_default_reservations()  # Load default reservations
     filepath = "./flight_data.csv"
     flights = create_flights_from_dataframe(filepath)
 
