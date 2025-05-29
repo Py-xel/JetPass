@@ -66,7 +66,16 @@ class Airline:  # Légi társaság osztály
 
 
 class TicketReserve:  # Jegy foglalás osztály
-
     def __init__(self, ticket_number, flight_number):
         self.ticket_number = ticket_number
         self.flight_number = flight_number
+
+    def to_dict(self):
+        return {
+            "ticket_number": self.ticket_number,
+            "flight_number": self.flight_number,
+        }
+
+    @staticmethod
+    def from_dict(data):
+        return TicketReserve(data["ticket_number"], data["flight_number"])

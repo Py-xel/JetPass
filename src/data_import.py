@@ -5,8 +5,7 @@ def import_flight_data(filepath):
     import pandas as pd
 
     try:
-        df = pd.read_csv(filepath, encoding="latin1", delimiter=";")  # <--- here
-        print("Columns found in CSV:", df.columns.tolist())
+        df = pd.read_csv(filepath, encoding="latin1", delimiter=";")
         return df
     except FileNotFoundError:
         print(f"Error: File not found at {filepath}!")
