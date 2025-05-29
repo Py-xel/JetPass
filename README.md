@@ -13,6 +13,10 @@ JetPass is a simple, interactive console-based flight reservation system built w
 - **Persistent Storage**: Reservations are saved and loaded from a JSON file.
 - **Rich UI**: Utilizes the rich library for beautified terminal tables and questionary for interactive prompts.
 
+All reservations are saved to a json file called `reservations.json`. Three reservations are hardcoded when the program starts initially, and the file is completely wiped upon exiting.
+
+The CSV file can be modified, but it has to be UTF-8 encoded, with a `;` as a delimiter.
+
 #### Dependencies
 
 - Pandas: CSV management.
