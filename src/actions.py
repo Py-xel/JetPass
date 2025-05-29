@@ -2,7 +2,8 @@ from rich.table import Table
 from rich.console import Console
 from rich.prompt import Prompt
 from classes import TicketReserve
-from reservations import save_reservation, load_reservations
+import json
+from reservations import RESERVATION_FILE, load_reservations, save_reservation
 
 console = Console()  # Required for rich library
 
@@ -123,3 +124,52 @@ def view_reservations():
         )
 
     console.print(table)
+
+
+def delete_reservation():
+    reservations = load_reservations()
+    if not reservations:
+        console.print("No reservations to delete.", style="bold red")
+        return
+
+    table = Table(show_header=True, header_style="bold white")
+    table.add_column("#", justify="center")
+    table.add_column("Ticket Number", style="cyan", justify="center")
+    table.add_column("Flight Number", style="bold", justify="center")
+    table.add_column("Airline", justify="center")
+    table.add_column("Origin", justify="center")
+    table.add_column("Destination", justify="center")
+    table.add_column("Departure Date", justify="center")
+    table.add_column("Price", style="green", justify="center")
+
+    for i, r in enumerate(reservations, start=1):
+        table.add_row(
+            str(i),
+            r.ticket_number,
+            r.flight_number,
+            r.airline,
+            r.origin,
+            r.destination,
+            r.departure_date,
+            f"{r.price} Ft",
+        )
+
+    console.print(table)
+
+    while True:
+        try:
+            choice = int(Prompt.ask("Enter the number of the reservation to delete"))
+            if 1 <= choice <= len(reservations):
+                deleted = reservations.pop(choice - 1)
+                # Save updated reservations back to file
+                with open(RESERVATION_FILE, "w") as file:
+                    json.dump([r.to_dict() for r in reservations], file, indent=4)
+                console.print(
+                    f"Deleted reservation for flight {deleted.flight_number} successfully!",
+                    style="bold green",
+                )
+                break
+            else:
+                console.print("Invalid number. Try again.", style="bold red")
+        except ValueError:
+            console.print("Please enter a valid number.", style="bold red")

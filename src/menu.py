@@ -1,5 +1,5 @@
 import questionary
-from actions import view_flights, reserve_flight, view_reservations
+from actions import view_flights, reserve_flight, view_reservations, delete_reservation
 from reservations import clear_reservations
 
 
@@ -11,6 +11,7 @@ def main_menu(flights):
                 "View all available flights",
                 "Reserve a flight",
                 "View current reservations",
+                "Delete reservations",
                 "Exit",
             ],
         ).ask()
@@ -21,6 +22,8 @@ def main_menu(flights):
             reserve_flight(flights)
         elif choice == "View current reservations":
             view_reservations()
+        elif choice == "Delete reservations":
+            delete_reservation()
         elif choice == "Exit":
             clear_reservations()
             print("Thank you for using JetPass!")
