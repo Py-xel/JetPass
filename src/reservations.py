@@ -1,6 +1,10 @@
 import json
 import os
 from classes import TicketReserve
+from rich.console import Console
+import sys
+
+console = Console()  # Required for rich library
 
 RESERVATION_FILE = "reservations.json"
 
@@ -16,13 +20,25 @@ def load_reservations():
 
 def save_reservation(new_reservation):
     reservations = load_reservations()
+
+    for r in reservations:
+        if (
+            r.flight_number == new_reservation.flight_number
+        ):  # Check for duplicate flight numbers as they are unique
+            console.print(
+                f"Reservation for ticket {new_reservation.ticket_number} already exists.",
+                style="bold red",
+            )
+            return
     reservations.append(new_reservation)
+    console.clear()
+    console.print(
+        f"Reservation saved for flight {new_reservation.flight_number}!",
+        style="bold green",
+    )
 
     with open(RESERVATION_FILE, "w") as file:
         json.dump([r.to_dict() for r in reservations], file, indent=4)
-
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
-    print(f"Reservation saved for flight {new_reservation.flight_number}!")
 
 
 def clear_reservations():

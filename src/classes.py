@@ -80,7 +80,7 @@ class TicketReserve:
         self.ticket_number = ticket_number or str(
             uuid.uuid4()
         )  # Generate a random uuid
-        self.flight_number = flight_number
+        self.flight_number = str(flight_number)
         self.airline = airline
         self.origin = origin
         self.destination = destination
