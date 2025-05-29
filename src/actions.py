@@ -1,32 +1,96 @@
-import questionary
-from reservations import save_reservation
+from rich.table import Table
+from rich.console import Console
+from rich.prompt import Prompt
 from classes import TicketReserve
-import random
+from reservations import save_reservation
+
+console = Console()  # Required for rich library
 
 
-def view_flights(flights):
-    print("\nAvailable Flights:")
+def view_flights(flights):  # Lists all flights from the flight_data.csv table
+    if not flights:
+        console.print("No flights available.\n", style="bold red")
+        return
+
+    table = Table(show_header=True, header_style="bold white")
+
+    table.add_column("Airline", style="cyan", justify="left")
+    table.add_column("Flight Number", style="bold", justify="center")
+    table.add_column("Origin", justify="center")
+    table.add_column("Destination", justify="center")
+    table.add_column("Price", style="green", justify="center")
+    table.add_column("Reserve From", justify="center")
+    table.add_column("Reserve Till", justify="center")
+    table.add_column("Departure Date", style="yellow", justify="center")
+
     for flight in flights:
-        print(
-            f"{type(flight).__name__} | Flight: {flight.flight_num}, "
-            f"{flight.origin} → {flight.destination}, "
-            f"Departure: {flight.departure_date}, "
-            f"Price: {flight.ticket_price} Ft"
+        table.add_row(
+            flight.airline,
+            flight.flight_num,
+            flight.origin,
+            flight.destination,
+            f"{flight.ticket_price} Ft",
+            flight.reserve_from,
+            flight.reserve_till,
+            flight.departure_date,
         )
-    print()
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    console.print(table)
 
 
-def reserve_flight(flights):
-    flight_nums = [flight.flight_num for flight in flights]
+def reserve_flight(
+    flights,
+):  # Lists all flights then saves a selected one to a JSON file
+    if not flights:
+        console.print("No flights available for reservation.\n", style="bold red")
+        return None
 
-    selected = questionary.select(
-        "Select a flight to reserve:", choices=flight_nums
-    ).ask()
+    table = Table(show_header=True, header_style="bold white")
+    table.add_column("#", justify="center")
+    table.add_column("Airline", style="cyan", justify="left")
+    table.add_column("Flight Number", style="bold", justify="center")
+    table.add_column("Origin", justify="center")
+    table.add_column("Destination", justify="center")
+    table.add_column("Price", style="green", justify="center")
+    table.add_column("Reserve From", justify="center")
+    table.add_column("Reserve Till", justify="center")
+    table.add_column("Departure Date", style="yellow", justify="center")
 
-    if selected:
-        # Generate a random ticket number
-        ticket_number = f"TKT{random.randint(1000, 9999)}"
+    for i, flight in enumerate(flights, start=1):
+        table.add_row(
+            str(i),
+            flight.airline,
+            flight.flight_num,
+            flight.origin,
+            flight.destination,
+            f"{flight.ticket_price} Ft",
+            flight.reserve_from,
+            flight.reserve_till,
+            flight.departure_date,
+        )
 
-        # Create and save reservation
-        reservation = TicketReserve(ticket_number, selected)
-        save_reservation(reservation)
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    console.print(table)
+
+    while True:
+        try:
+            choice = int(Prompt.ask("Enter the number of the flight to reserve"))
+            if 1 <= choice <= len(flights):
+                selected_flight = flights[choice - 1]
+
+                reservation = TicketReserve(
+                    flight_number=selected_flight.flight_num,
+                    airline=selected_flight.airline,
+                    origin=selected_flight.origin,
+                    destination=selected_flight.destination,
+                    departure_date=selected_flight.departure_date,
+                    price=selected_flight.ticket_price,
+                )
+
+                save_reservation(reservation)
+
+                return selected_flight
+            else:
+                console.print("Invalid number. Try again.", style="bold red")
+        except ValueError:
+            console.print("Please enter a valid number.", style="bold red")

@@ -21,4 +21,10 @@ def save_reservation(new_reservation):
     with open(RESERVATION_FILE, "w") as file:
         json.dump([r.to_dict() for r in reservations], file, indent=4)
 
-    print(f"Reservation saved for flight {new_reservation.flight_number} ✅")
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    print(f"Reservation saved for flight {new_reservation.flight_number}!")
+
+
+def clear_reservations():
+    with open(RESERVATION_FILE, "w") as file:
+        json.dump([], file, indent=4)

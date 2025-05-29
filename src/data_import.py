@@ -2,7 +2,6 @@ import pandas as pd
 
 
 def import_flight_data(filepath):
-    import pandas as pd
 
     try:
         df = pd.read_csv(filepath, encoding="latin1", delimiter=";")
