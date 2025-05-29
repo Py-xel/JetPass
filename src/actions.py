@@ -4,6 +4,7 @@ from rich.prompt import Prompt
 from classes import TicketReserve
 import json
 from reservations import RESERVATION_FILE, load_reservations, save_reservation
+import time
 
 console = Console()  # Required for rich library
 
@@ -15,7 +16,7 @@ def view_flights(flights):  # Lists all flights from the flight_data.csv table
 
     table = Table(show_header=True, header_style="bold white")
 
-    table.add_column("Airline", style="cyan", justify="left")
+    table.add_column("Airline", style="cyan", justify="left", min_width=15)
     table.add_column("Flight Number", style="bold", justify="center")
     table.add_column("Origin", justify="center")
     table.add_column("Destination", justify="center")
@@ -35,8 +36,8 @@ def view_flights(flights):  # Lists all flights from the flight_data.csv table
             flight.reserve_till,
             flight.departure_date,
         )
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
     console.clear()  # clear rich console
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
     console.print(table)
 
 
@@ -49,7 +50,7 @@ def reserve_flight(
 
     table = Table(show_header=True, header_style="bold white")
     table.add_column("#", justify="center")
-    table.add_column("Airline", style="cyan", justify="left")
+    table.add_column("Airline", style="cyan", justify="left", min_width=15)
     table.add_column("Flight Number", style="bold", justify="center")
     table.add_column("Origin", justify="center")
     table.add_column("Destination", justify="center")
@@ -70,8 +71,8 @@ def reserve_flight(
             flight.reserve_till,
             flight.departure_date,
         )
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
     console.clear()  # clear rich console
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
     console.print(table)
 
     while True:
@@ -107,7 +108,7 @@ def view_reservations():
     table = Table(show_header=True, header_style="bold white")
     table.add_column("Ticket Number", style="cyan", justify="center")
     table.add_column("Flight Number", style="bold", justify="center")
-    table.add_column("Airline", justify="center")
+    table.add_column("Airline", justify="left", min_width=15)
     table.add_column("Origin", justify="center")
     table.add_column("Destination", justify="center")
     table.add_column("Departure Date", justify="center")
@@ -123,7 +124,8 @@ def view_reservations():
             r.departure_date,
             f"{r.price} Ft",
         )
-
+    console.clear()  # clear rich console
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
     console.print(table)
 
 
@@ -137,7 +139,7 @@ def delete_reservation():
     table.add_column("#", justify="center")
     table.add_column("Ticket Number", style="cyan", justify="center")
     table.add_column("Flight Number", style="bold", justify="center")
-    table.add_column("Airline", justify="center")
+    table.add_column("Airline", justify="left")
     table.add_column("Origin", justify="center")
     table.add_column("Destination", justify="center")
     table.add_column("Departure Date", justify="center")
@@ -154,7 +156,8 @@ def delete_reservation():
             r.departure_date,
             f"{r.price} Ft",
         )
-
+    console.clear()  # clear rich console
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
     console.print(table)
 
     while True:
@@ -165,6 +168,8 @@ def delete_reservation():
                 # Save updated reservations back to file
                 with open(RESERVATION_FILE, "w") as file:
                     json.dump([r.to_dict() for r in reservations], file, indent=4)
+                console.clear()  # clear rich console
+                print("\033[H\033[3J", end="")  # ANSI escape code to clear console
                 console.print(
                     f"Deleted reservation for flight {deleted.flight_number} successfully!",
                     style="bold green",

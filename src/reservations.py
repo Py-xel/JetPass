@@ -25,7 +25,7 @@ def save_reservation(new_reservation):
             r.flight_number == new_reservation.flight_number
         ):  # Check for duplicate flight numbers as they are unique
             console.print(
-                f"Reservation for ticket {new_reservation.ticket_number} already exists.",
+                f"Reservation for flight {new_reservation.flight_number} already exists.",
                 style="bold red",
             )
             return
