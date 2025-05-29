@@ -4,9 +4,14 @@ from rich.prompt import Prompt
 from classes import TicketReserve
 import json
 from reservations import RESERVATION_FILE, load_reservations, save_reservation
-import time
+import os
 
 console = Console()  # Required for rich library
+
+
+def full_clear():
+    os.system("cls" if os.name == "nt" else "clear")
+    console.clear()
 
 
 def view_flights(flights):  # Lists all flights from the flight_data.csv table
@@ -36,8 +41,7 @@ def view_flights(flights):  # Lists all flights from the flight_data.csv table
             flight.reserve_till,
             flight.departure_date,
         )
-    console.clear()  # clear rich console
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    full_clear()
     console.print(table)
 
 
@@ -71,8 +75,7 @@ def reserve_flight(
             flight.reserve_till,
             flight.departure_date,
         )
-    console.clear()  # clear rich console
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    full_clear()
     console.print(table)
 
     while True:
@@ -124,8 +127,7 @@ def view_reservations():
             r.departure_date,
             f"{r.price} Ft",
         )
-    console.clear()  # clear rich console
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    full_clear()
     console.print(table)
 
 
@@ -156,8 +158,7 @@ def delete_reservation():
             r.departure_date,
             f"{r.price} Ft",
         )
-    console.clear()  # clear rich console
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    full_clear()
     console.print(table)
 
     while True:
@@ -168,8 +169,7 @@ def delete_reservation():
                 # Save updated reservations back to file
                 with open(RESERVATION_FILE, "w") as file:
                     json.dump([r.to_dict() for r in reservations], file, indent=4)
-                console.clear()  # clear rich console
-                print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+                full_clear()
                 console.print(
                     f"Deleted reservation for flight {deleted.flight_number} successfully!",
                     style="bold green",

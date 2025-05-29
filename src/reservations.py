@@ -8,6 +8,11 @@ console = Console()  # Required for rich library
 RESERVATION_FILE = "reservations.json"
 
 
+def full_clear():
+    os.system("cls" if os.name == "nt" else "clear")
+    console.clear()
+
+
 def load_reservations():
     if not os.path.exists(RESERVATION_FILE):
         return []
@@ -24,14 +29,14 @@ def save_reservation(new_reservation):
         if (
             r.flight_number == new_reservation.flight_number
         ):  # Check for duplicate flight numbers as they are unique
+            full_clear()
             console.print(
                 f"Reservation for flight {new_reservation.flight_number} already exists.",
                 style="bold red",
             )
             return
     reservations.append(new_reservation)
-    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
-    console.clear()  # clear rich console
+    full_clear()
     console.print(
         f"Reservation saved for flight {new_reservation.flight_number}!",
         style="bold green",
