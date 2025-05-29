@@ -2,7 +2,6 @@ import json
 import os
 from classes import TicketReserve
 from rich.console import Console
-import sys
 
 console = Console()  # Required for rich library
 
@@ -31,7 +30,8 @@ def save_reservation(new_reservation):
             )
             return
     reservations.append(new_reservation)
-    console.clear()
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    console.clear()  # clear rich console
     console.print(
         f"Reservation saved for flight {new_reservation.flight_number}!",
         style="bold green",

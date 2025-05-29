@@ -35,7 +35,8 @@ def view_flights(flights):  # Lists all flights from the flight_data.csv table
             flight.reserve_till,
             flight.departure_date,
         )
-    console.clear()
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    console.clear()  # clear rich console
     console.print(table)
 
 
@@ -69,8 +70,8 @@ def reserve_flight(
             flight.reserve_till,
             flight.departure_date,
         )
-
-    console.clear()
+    print("\033[H\033[3J", end="")  # ANSI escape code to clear console
+    console.clear()  # clear rich console
     console.print(table)
 
     while True:
